@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Routes } from "react-router-dom";
 import Blogs from "./components/Blogs";
 import Contact from "./components/Contact";
+import CreateBlog from "./components/CreateBlog";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Blogs />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/create" element={<CreateBlog />} />
       </Routes>
     </>
   );
