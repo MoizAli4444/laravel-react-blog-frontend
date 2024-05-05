@@ -6,11 +6,33 @@ import { useNavigate } from "react-router-dom";
 
 const CreateBlog = () => {
   const [html, setHtml] = useState("my <b>HTML</b>");
+  const [imageId, setImageId] = useState("");
   const navigate = useNavigate();
 
   function onChange(e) {
     setHtml(e.target.value);
   }
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch("http://localhost:8000/api/save-temp-image", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await res.json();
+
+    if (result.status == false) {
+      alert(result.errors.image);
+      e.target.value = null;
+    }
+
+    console.log("result.image.id", result.image.id);
+    setImageId(result.image.id);
+  };
 
   const {
     register,
@@ -20,7 +42,7 @@ const CreateBlog = () => {
   } = useForm();
 
   const formSubmit = async (data) => {
-    const newData = { ...data, description: html };
+    const newData = { ...data, description: html, image_id: imageId };
     console.log(newData);
 
     const res = await fetch("http://localhost:8000/api/blogs", {
@@ -88,7 +110,12 @@ const CreateBlog = () => {
               <label htmlFor="" className="form-label">
                 Image
               </label>
-              <input type="file" className="form-control" placeholder="Image" />
+              <input
+                onChange={handleFileChange}
+                type="file"
+                className="form-control"
+                placeholder="Image"
+              />
             </div>
 
             <div className="mb-3">
